@@ -5,13 +5,18 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const cors = require("cors");
 const mongoose = require('mongoose');
+
+const dotenv = require("dotenv")
+dotenv.config()
+
 mongoose
-.connect('')
+.connect(process.env.DB_NAME)
 .then(() => console.log("Database connected"))
 .catch((err) => console.log(err));
 
 const indexRouter = require('./routes/index');
 const categoriesRouter = require('./routes/categories');
+const productsRouter = require('./routes/products');
 
 const app = express();
 
@@ -27,8 +32,8 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
-app.use('/Category', categoriesRouter);
-//app.use('/Product', catsRouter);
+app.use('/category', categoriesRouter);
+app.use('/product', productsRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
