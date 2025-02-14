@@ -66,7 +66,7 @@ exports.deleteCategory = async (req, res) => {
 
 exports.createCategory = async (req, res) => {
   try {
-    const data = new Cat({
+    const data = new Category({
       name: req.body.name,
     });
     const result = await data.save();
