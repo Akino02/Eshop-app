@@ -1,12 +1,46 @@
-import { Image, StyleSheet, Platform } from 'react-native';
+import { Image, StyleSheet, Platform, Alert } from 'react-native';
+
+import { useState, useEffect } from 'react';
 
 import { HelloWave } from '@/components/HelloWave';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import { getAllProducts } from "../models/db_connects"
+import ProductList from '../ProductList';
 
 export default function HomeScreen() {
-  return (
+  const [products, setProducts] = useState();
+  const [isLoaded, setLoaded] = useState(false);
+
+  const load = async () => {
+    try{
+      const data = await getAllProducts();
+      if (data.status === 500 || data.status === 404) return setLoaded(null);
+      if (data.status === 200) {
+        setProducts(data.payload);
+        setLoaded(true);
+      }
+    }
+    catch(error){
+      console.error("Error getting all products")
+    }
+    finally{
+      setLoaded(false);
+    }
+  };
+
+  useEffect(() => {
+    load();
+  }, []);
+
+  return(
+    <ThemedView>
+      <ProductList />
+    </ThemedView>
+  )
+
+  /*return (
     <ParallaxScrollView
       headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
       headerImage={
@@ -16,7 +50,7 @@ export default function HomeScreen() {
         />
       }>
       <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
+        <ThemedText type="title">{products[0].title}</ThemedText>
         <HelloWave />
       </ThemedView>
       <ThemedView style={styles.stepContainer}>
@@ -51,7 +85,7 @@ export default function HomeScreen() {
         </ThemedText>
       </ThemedView>
     </ParallaxScrollView>
-  );
+  );*/
 }
 
 const styles = StyleSheet.create({
