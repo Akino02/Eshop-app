@@ -3,16 +3,12 @@ import { StyleSheet, Text } from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 
-import ProductList from '../ProductList';
-import Title from '../Title';
-
-export default function HomeScreen() {
+export default function Title() {
 
   return(
-    <ThemedView style={styles.contentContainer}>
-      <Title/>
-      <ProductList />
-    </ThemedView>
+      <ThemedView style={styles.titleContainer}>
+        <Text style={styles.titleText}>Coral Shop</Text>
+      </ThemedView>
   )
 }
 
@@ -27,8 +23,5 @@ const styles = StyleSheet.create({
   titleText:{
     fontSize: 25,
     color: "white"
-  },
-  contentContainer: {
-    height: "100%"
   },
 });

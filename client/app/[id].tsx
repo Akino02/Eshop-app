@@ -1,4 +1,4 @@
-import { StyleSheet, Image, Platform, ActivityIndicator, Text} from 'react-native';
+import { StyleSheet, ActivityIndicator, Text} from 'react-native';
 
 import { useEffect, useState } from 'react';
 
@@ -7,20 +7,20 @@ import { ThemedText } from '@/components/ThemedText';
 import { useLocalSearchParams } from 'expo-router';
 import {getProductById} from "./models/db_connects"
 
-type ProductType = {
-  _id: string,
-  title: string,
-  category: string,
-  description: string,
-  cost: number
-}
+import {Product} from "../types/product"
+import { useProducts } from '@/hooks/useProducts';
+
 
 export default function ProductView() {
   const {id} = useLocalSearchParams<{ id:string }>()
-  const [products, setProduct] = useState<ProductType>();
+  const {product} = useProducts(id)
   const [isLoaded, setLoaded] = useState(false);
 
-  const load = async () => {
+  //Budeme lovati
+  //https://www.xe.com/currencyconverter/convert/?Amount=1&From=USD&To=ZWL
+  const bigMONEY = 66081.147
+
+  /*const load = async () => {
       const data = await getProductById(id);
       if (data.status === 500 || data.status === 404) {
         setLoaded(false);
@@ -30,7 +30,7 @@ export default function ProductView() {
         setProduct(data.payload);
         setLoaded(true);
       }
-      console.log(products)
+      //console.log(product)
     };
   
     useEffect(() => {
@@ -43,15 +43,29 @@ export default function ProductView() {
   
   if (!isLoaded) {
     return <ActivityIndicator size="large" color="#0000ff" />;
-  }
+  }*/
 
-  return (
-    <ThemedView style={styles.container}>
-      <ThemedText>
-        {products?._id}
-      </ThemedText>
-    </ThemedView>
-  );
+  if (product){
+    return (
+      <ThemedView style={styles.container}>
+        <ThemedText>
+          {product?._id}
+        </ThemedText>
+        <ThemedText>
+          {product?.title}
+        </ThemedText>
+        <ThemedText>
+          {product?.category}
+        </ThemedText>
+        <ThemedText>
+          {product?.description}
+        </ThemedText>
+        <ThemedText>
+          {product?.cost*bigMONEY} Z$
+        </ThemedText>
+      </ThemedView>
+    );
+  }
 }
 
 const styles = StyleSheet.create({
@@ -60,9 +74,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     flexWrap: "wrap",
-    flexDirection: "row",
+    flexDirection: "column",
     gap: 16,
     height: "100%",
   },
+  
 });
 

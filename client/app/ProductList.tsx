@@ -1,22 +1,15 @@
-import { useState, useEffect } from "react";
-import { View, Text, ActivityIndicator, StyleSheet, ScrollView, Button } from "react-native";
-import { getAllProducts } from "./models/db_connects";
-
+import { StyleSheet, Text, ScrollView } from "react-native";
 import { Link } from "expo-router";
 
-type ProductType = {
-  _id: string,
-  title: string,
-  category: string,
-  description: string,
-  cost: number
-}
+import { useProducts } from "@/hooks/useProducts";
+import { ThemedView } from "@/components/ThemedView";
+import { ThemedText } from "@/components/ThemedText";
 
 export default function ProductList() {
-  const [products, setProducts] = useState<ProductType[]>([]);
-  const [isLoaded, setLoaded] = useState(false);
+  //const [products, setProducts] = useState<Product[]>([]);
+  const {products} = useProducts()
 
-  const load = async () => {
+  /*const load = async () => {
     const data = await getAllProducts();
     if (data.status === 500 || data.status === 404) {
       setLoaded(false);
@@ -31,25 +24,27 @@ export default function ProductList() {
 
   useEffect(() => {
     load();
-  }, []);
+  }, []);*/
 
-  if (isLoaded === null) {
+  /*if (isLoaded === null) {
     return <Text>Products not found</Text>;
   }
 
   if (!isLoaded) {
     return <ActivityIndicator size="large" color="#0000ff" />;
-  }
+  }*/
+
+  //console.log(products)
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      {products.map((product, index) => (
-        <View key={index}>
+      {products?.map((product, index) => (
+        <Text key={index}>
           <Link href={{
           pathname: "/[id]",
           params: {id: product._id},
             }}>
-              <View style={styles.productBox}>
+              <ThemedView style={styles.productBox}>
                 <Text style={styles.inBoxTitle} numberOfLines={1}>{product.title}</Text>
                 <Text>Category: {product.category}</Text>
                 <Text style={styles.inBoxDescription} numberOfLines={1}>Descripion:<br/>{product.description}</Text>
@@ -57,9 +52,9 @@ export default function ProductList() {
                   <Text>Cost: </Text>
                   <Text>{product.cost} Kč</Text>
                 </Text>
-              </View>
+              </ThemedView>
           </Link>
-        </View>
+        </Text>
       ))}
     </ScrollView>
   );
